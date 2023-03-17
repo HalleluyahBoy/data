@@ -49,4 +49,8 @@ contract SchoolDatabase {
     ) public view returns (bool) {
         return subjectExists[subjectName];
     }
+
+    function getNumStudents() public view returns (uint256) {
+        return students.length;
+    }
 }
