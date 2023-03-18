@@ -2,52 +2,30 @@
 pragma solidity ^0.8.0;
 
 contract SchoolDatabase {
-    struct Subject {
+    struct Student {
         string name;
-        uint256[] testScores;
+        uint256 age;
+        string major;
     }
 
-    mapping(address => mapping(string => Subject)) private studentSubjects;
-    mapping(address => string[]) private studentSubjectNames;
-    mapping(string => bool) private subjectExists;
+    Student[] public students;
 
-    function addTestScore(string memory subjectName, uint256 testScore) public {
-        require(subjectExists[subjectName], "Subject does not exist");
-        Subject storage subject = studentSubjects[msg.sender][subjectName];
-        subject.testScores.push(testScore);
-        if (subject.testScores.length == 1) {
-            subject.name = subjectName;
-            studentSubjectNames[msg.sender].push(subjectName);
-        }
+    function addStudent(
+        string memory name,
+        uint256 age,
+        string memory major
+    ) public {
+        students.push(Student(name, age, major));
     }
 
-    function getTestScores(
-        address studentAddress,
-        string memory subjectName
-    ) public view returns (uint256[] memory) {
-        return studentSubjects[studentAddress][subjectName].testScores;
-    }
-
-    function getStudentSubjectNames(
-        address studentAddress
-    ) public view returns (string[] memory) {
-        return studentSubjectNames[studentAddress];
-    }
-
-    function addSubject(string memory subjectName) public {
-        require(!subjectExists[subjectName], "Subject already exists");
-        subjectExists[subjectName] = true;
-    }
-
-    function removeSubject(string memory subjectName) public {
-        require(subjectExists[subjectName], "Subject does not exist");
-        subjectExists[subjectName] = false;
-    }
-
-    function getSubjectExists(
-        string memory subjectName
-    ) public view returns (bool) {
-        return subjectExists[subjectName];
+    function getStudent(
+        uint256 index
+    ) public view returns (string memory, uint256, string memory) {
+        return (
+            students[index].name,
+            students[index].age,
+            students[index].major
+        );
     }
 
     function getNumStudents() public view returns (uint256) {
